@@ -27,17 +27,17 @@ export class Bug{
     dueDate: Date;
 
     @Column()
-    dateCompleted :Date;
+    dateCompleted?: Date;
 
     @ManyToOne(() => Project, project => project.bugs)
     project: Project;
 
     // TO BE REPLACED WITH USER CLASSES
     @Column()
-    assignedDeveloper: string
+    assignedDeveloper?: string
 
     @Column()
-    tester: string;
+    tester?: string;
 
     
 }
