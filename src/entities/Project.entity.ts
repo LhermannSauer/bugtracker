@@ -1,20 +1,20 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Bug } from "./Bug.entity";
 
-@Entity()
+@Entity({ name: "projects" })
 export class Project {
-    @PrimaryGeneratedColumn()
-    id: number
-    
-    @Column()
-    name: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    description: string;
+  @Column()
+  name: string;
 
-    @Column()
-    manager: string // to be switched to User class when implemented
+  @Column()
+  description: string;
 
-    @OneToMany(() => Bug, bug => bug.project)
-    bugs: Bug[]
+  @Column()
+  manager?: string; // to be switched to User class when implemented
+
+  @OneToMany(() => Bug, (bug) => bug.project)
+  bugs: Bug[];
 }

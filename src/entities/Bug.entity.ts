@@ -1,45 +1,47 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+} from "typeorm";
 import { Priority } from "./Priority.entity";
 import { Status } from "./Status.entity";
 import { Project } from "./Project.entity";
 
-@Entity()
-export class Bug{
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity({ name: "Bugs" })
+export class Bug {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title:string;
+  @Column()
+  title: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column()
-    priority: Priority;
+  @CreateDateColumn()
+  dateCreated: Date;
 
-    @Column()
-    status: Status;
+  @Column({ nullable: true })
+  dueDate?: Date;
 
-    @CreateDateColumn()
-    dateCreated: Date;
-    
-    @Column()
-    dueDate: Date;
+  @Column({ nullable: true })
+  dateCompleted?: Date;
 
-    @Column()
-    dateCompleted?: Date;
+  @ManyToOne(() => Priority)
+  priority: Priority;
 
-    @ManyToOne(() => Project, project => project.bugs)
-    project: Project;
+  @ManyToOne(() => Status)
+  status: Status;
 
-    // TO BE REPLACED WITH USER CLASSES
-    @Column()
-    assignedDeveloper?: string
+  @ManyToOne(() => Project, (project) => project.bugs)
+  project: Project;
 
-    @Column()
-    tester?: string;
+  // TO BE REPLACED WITH USER CLASSES
+  @Column({ nullable: true })
+  assignedDeveloper?: string;
 
-    
+  @Column({ nullable: true })
+  tester?: string;
 }
-
-
