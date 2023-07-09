@@ -9,7 +9,7 @@ import { Priority } from "./Priority.entity";
 import { Status } from "./Status.entity";
 import { Project } from "./Project.entity";
 
-@Entity({ name: "Bugs" })
+@Entity({ name: "bugs" })
 export class Bug {
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,7 +35,7 @@ export class Bug {
   @ManyToOne(() => Status)
   status: Status;
 
-  @ManyToOne(() => Project, (project) => project.bugs)
+  @ManyToOne(() => Project, (project) => project.bugs, { eager: true })
   project: Project;
 
   // TO BE REPLACED WITH USER CLASSES
