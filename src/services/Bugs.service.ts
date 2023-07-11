@@ -1,23 +1,24 @@
 import { Bug } from "../entities/Bug.entity";
-import { bugRepository } from "../repositories/bugs.repo";
+import { BugRepository } from "../repositories/Bugs.repo";
 
-const getBugs = async (): Promise<Bug[]> => {
-  const bugs = await bugRepository.find({
+export const getBugsService = async (): Promise<Bug[]> => {
+  const bugs = await BugRepository.find({
     relations: { project: true, priority: true, status: true },
     order: {
       priority: {
         id: "ASC",
       },
+      dueDate: "ASC",
     },
   });
 
   return bugs;
 };
 
-const getBugById = async (id: number): Promise<Bug> => {
+export const getBugByIdService = async (id: number): Promise<Bug> => {
   validateId(id);
 
-  const bug = await bugRepository.findOne({
+  const bug = await BugRepository.findOne({
     where: { id: id },
     relations: { project: true, priority: true, status: true },
   });
@@ -27,47 +28,38 @@ const getBugById = async (id: number): Promise<Bug> => {
   return bug;
 };
 
-const createBug = async (
+export const createBugService = async (
   bugDTO: Omit<Bug, "id" | "dateCreated">
 ): Promise<Bug> => {
-  const bug = bugRepository.create(bugDTO);
+  const bug = BugRepository.create(bugDTO);
   bug.dateCreated = new Date();
 
-  return await bugRepository.save(bug);
+  return await BugRepository.save(bug);
 };
 
-const updateBug = async (
+export const updateBugService = async (
   id: number,
   bugDTO: Omit<Bug, "id" | "dateCreated">
 ): Promise<Bug> => {
   validateId(id);
 
-  let bug = await bugRepository.preload({ ...bugDTO, id: id });
+  let bug = await BugRepository.preload({ ...bugDTO, id: id });
 
   if (!bug) throw new Error("Bug not found");
-  // await bugRepository.merge(bug, bugDTO);
 
-  return bugRepository.save(bug);
+  return await BugRepository.save(bug);
 };
 
-const deleteBug = async (id: number) => {
+export const deleteBugService = async (id: number) => {
   validateId(id);
 
-  const bug = await getBugById(id);
+  const bug = await getBugByIdService(id);
 
-  const result = await bugRepository.remove(bug);
+  const result = await BugRepository.remove(bug);
 
   return result;
 };
 
 const validateId = (id: number) => {
   if (id <= 0 || Number.isNaN(id)) throw new Error("Invalid ID"); // to be replaces with invalid request bug
-};
-
-export default {
-  createBug,
-  getBugs,
-  getBugById,
-  updateBug,
-  deleteBug,
 };

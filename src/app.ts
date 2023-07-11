@@ -2,8 +2,8 @@ import express from "express";
 import path from "path";
 import "dotenv/config";
 
-import { router as indexRouter } from "./routes/index";
-import { router as bugsRouter } from "./routes/bugs";
+import { router as indexRouter } from "./routes/Index";
+import { router as bugsRouter } from "./routes/Bugs";
 import { AppDataSource } from "./typeorm.config";
 
 const app = express();
