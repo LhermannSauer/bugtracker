@@ -3,13 +3,14 @@ import { validate } from "class-validator";
 import { Bug } from "../entities/Bug.entity";
 import { bugsRepository } from "../repositories/Bugs.repo";
 import { inject, injectable } from "inversify";
+import { IBugsService } from "../interfaces/Bugs.service";
 
 @injectable()
-export class BugsService {
+export class BugsService implements IBugsService {
   @inject("BugsRepository")
   private readonly bugRepository: typeof bugsRepository;
 
-  public getBugsService = async (): Promise<Bug[]> => {
+  public getBugs = async (): Promise<Bug[]> => {
     const bugs = await this.bugRepository.find({
       relations: { project: true, priority: true, status: true },
       order: {
@@ -23,7 +24,7 @@ export class BugsService {
     return bugs;
   };
 
-  public getBugByIdService = async (id: number): Promise<Bug> => {
+  public getBugById = async (id: number): Promise<Bug> => {
     this.validateId(id);
 
     const bug = await this.bugRepository.findOne({
@@ -36,7 +37,7 @@ export class BugsService {
     return bug;
   };
 
-  public createBugService = async (
+  public createBug = async (
     bugDTO: Omit<Bug, "id" | "dateCreated">
   ): Promise<Bug> => {
     const bug = this.bugRepository.create(bugDTO);
@@ -47,7 +48,7 @@ export class BugsService {
     return await this.bugRepository.save(bug);
   };
 
-  public updateBugService = async (
+  public updateBug = async (
     id: number,
     bugDTO: Omit<Bug, "id" | "dateCreated">
   ): Promise<Bug> => {
@@ -62,10 +63,10 @@ export class BugsService {
     return await this.bugRepository.save(bug);
   };
 
-  public deleteBugService = async (id: number) => {
+  public deleteBug = async (id: number) => {
     this.validateId(id);
 
-    const bug = await this.getBugByIdService(id);
+    const bug = await this.getBugById(id);
 
     const result = await this.bugRepository.remove(bug);
 

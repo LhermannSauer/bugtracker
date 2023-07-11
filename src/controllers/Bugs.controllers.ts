@@ -1,20 +1,20 @@
 import { inject, injectable } from "inversify";
 import { Bug } from "../entities/Bug.entity";
-import { BugsService } from "../services/Bugs.service";
+import { IBugsService } from "../interfaces/Bugs.service";
 
 @injectable()
 export class BugsController {
   @inject("BugsService")
-  private readonly bugsService: BugsService;
+  private readonly bugsService: IBugsService;
 
   public getBugs = async (): Promise<Bug[]> => {
-    const bugs = await this.bugsService.getBugsService();
+    const bugs = await this.bugsService.getBugs();
 
     return bugs;
   };
 
   public getBugById = async (id: number): Promise<Bug> => {
-    const bug = await this.bugsService.getBugByIdService(id);
+    const bug = await this.bugsService.getBugById(id);
 
     if (!bug) throw new Error("Not found: Bug");
 
@@ -24,7 +24,7 @@ export class BugsController {
   public createBug = async (
     bugDTO: Omit<Bug, "id" | "dateCreated">
   ): Promise<Bug> => {
-    const bug = await this.bugsService.createBugService(bugDTO);
+    const bug = await this.bugsService.createBug(bugDTO);
 
     return bug;
   };
@@ -33,15 +33,15 @@ export class BugsController {
     id: number,
     bugDTO: Omit<Bug, "id" | "dateCreated">
   ): Promise<Bug> => {
-    let bug = await this.bugsService.updateBugService(id, bugDTO);
+    let bug = await this.bugsService.updateBug(id, bugDTO);
 
     return bug;
   };
 
   public deleteBug = async (id: number) => {
-    const bug = await this.bugsService.getBugByIdService(id);
+    const bug = await this.bugsService.getBugById(id);
 
-    const result = await this.bugsService.deleteBugService(id);
+    const result = await this.bugsService.deleteBug(id);
 
     return result;
   };
