@@ -1,3 +1,5 @@
+import { validate } from "class-validator";
+
 import { Bug } from "../entities/Bug.entity";
 import { BugRepository } from "../repositories/Bugs.repo";
 
@@ -32,7 +34,9 @@ export const createBugService = async (
   bugDTO: Omit<Bug, "id" | "dateCreated">
 ): Promise<Bug> => {
   const bug = BugRepository.create(bugDTO);
-  bug.dateCreated = new Date();
+
+  const errors = await validate(bug);
+  if (errors.length) throw new Error("Validation Error: Invalid request");
 
   return await BugRepository.save(bug);
 };
@@ -44,8 +48,10 @@ export const updateBugService = async (
   validateId(id);
 
   let bug = await BugRepository.preload({ ...bugDTO, id: id });
-
   if (!bug) throw new Error("Bug not found");
+
+  const errors = await validate(bug);
+  if (errors.length) throw new Error("Validation Error: Invalid request");
 
   return await BugRepository.save(bug);
 };
