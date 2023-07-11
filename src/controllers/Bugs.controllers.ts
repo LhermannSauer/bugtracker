@@ -1,57 +1,48 @@
+import { inject, injectable } from "inversify";
 import { Bug } from "../entities/Bug.entity";
-import {
-  createBugService,
-  getBugsService,
-  getBugByIdService,
-  updateBugService,
-  deleteBugService,
-} from "../services/Bugs.service";
+import { BugsService } from "../services/Bugs.service";
 
-// ...
+@injectable()
+export class BugsController {
+  @inject("BugsService")
+  private readonly bugsService: BugsService;
 
-const getBugs = async (): Promise<Bug[]> => {
-  const bugs = await getBugsService();
+  public getBugs = async (): Promise<Bug[]> => {
+    const bugs = await this.bugsService.getBugsService();
 
-  return bugs;
-};
+    return bugs;
+  };
 
-const getBugById = async (id: number): Promise<Bug> => {
-  const bug = await getBugByIdService(id);
+  public getBugById = async (id: number): Promise<Bug> => {
+    const bug = await this.bugsService.getBugByIdService(id);
 
-  if (!bug) throw new Error("Not found: Bug");
+    if (!bug) throw new Error("Not found: Bug");
 
-  return bug;
-};
+    return bug;
+  };
 
-const createBug = async (
-  bugDTO: Omit<Bug, "id" | "dateCreated">
-): Promise<Bug> => {
-  const bug = await createBugService(bugDTO);
+  public createBug = async (
+    bugDTO: Omit<Bug, "id" | "dateCreated">
+  ): Promise<Bug> => {
+    const bug = await this.bugsService.createBugService(bugDTO);
 
-  return bug;
-};
+    return bug;
+  };
 
-const updateBug = async (
-  id: number,
-  bugDTO: Omit<Bug, "id" | "dateCreated">
-): Promise<Bug> => {
-  let bug = await updateBugService(id, bugDTO);
+  public updateBug = async (
+    id: number,
+    bugDTO: Omit<Bug, "id" | "dateCreated">
+  ): Promise<Bug> => {
+    let bug = await this.bugsService.updateBugService(id, bugDTO);
 
-  return bug;
-};
+    return bug;
+  };
 
-const deleteBug = async (id: number) => {
-  const bug = await getBugByIdService(id);
+  public deleteBug = async (id: number) => {
+    const bug = await this.bugsService.getBugByIdService(id);
 
-  const result = await deleteBugService(id);
+    const result = await this.bugsService.deleteBugService(id);
 
-  return result;
-};
-
-export default {
-  createBug,
-  getBugs,
-  getBugById,
-  updateBug,
-  deleteBug,
-};
+    return result;
+  };
+}

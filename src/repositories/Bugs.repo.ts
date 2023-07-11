@@ -1,4 +1,4 @@
 import { Bug } from "../entities/Bug.entity";
 import { AppDataSource } from "../typeorm.config";
 
-export const BugRepository = AppDataSource.getRepository(Bug);
+export const bugsRepository = AppDataSource.getRepository(Bug);

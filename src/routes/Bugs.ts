@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction, Router } from "express";
 import * as _ from "lodash";
 
-import bugsController from "../controllers/Bugs.controllers";
+import { BugsController } from "../controllers/Bugs.controllers";
 import asyncMiddleware from "../middleware/AsyncMiddleware";
+import { container } from "../inversify.config";
 
 export const router: Router = Router();
+const bugsController = container.resolve(BugsController);
 
 router.get(
   "/",

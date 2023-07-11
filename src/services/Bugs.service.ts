@@ -1,71 +1,78 @@
 import { validate } from "class-validator";
 
 import { Bug } from "../entities/Bug.entity";
-import { BugRepository } from "../repositories/Bugs.repo";
+import { bugsRepository } from "../repositories/Bugs.repo";
+import { inject, injectable } from "inversify";
 
-export const getBugsService = async (): Promise<Bug[]> => {
-  const bugs = await BugRepository.find({
-    relations: { project: true, priority: true, status: true },
-    order: {
-      priority: {
-        id: "ASC",
+@injectable()
+export class BugsService {
+  @inject("BugsRepository")
+  private readonly bugRepository: typeof bugsRepository;
+
+  public getBugsService = async (): Promise<Bug[]> => {
+    const bugs = await this.bugRepository.find({
+      relations: { project: true, priority: true, status: true },
+      order: {
+        priority: {
+          id: "ASC",
+        },
+        dueDate: "ASC",
       },
-      dueDate: "ASC",
-    },
-  });
+    });
 
-  return bugs;
-};
+    return bugs;
+  };
 
-export const getBugByIdService = async (id: number): Promise<Bug> => {
-  validateId(id);
+  public getBugByIdService = async (id: number): Promise<Bug> => {
+    this.validateId(id);
 
-  const bug = await BugRepository.findOne({
-    where: { id: id },
-    relations: { project: true, priority: true, status: true },
-  });
+    const bug = await this.bugRepository.findOne({
+      where: { id: id },
+      relations: { project: true, priority: true, status: true },
+    });
 
-  if (!bug) throw new Error("Not found: Bug"); // to be replaced with not found error
+    if (!bug) throw new Error("Not found: Bug"); // to be replaced with not found error
 
-  return bug;
-};
+    return bug;
+  };
 
-export const createBugService = async (
-  bugDTO: Omit<Bug, "id" | "dateCreated">
-): Promise<Bug> => {
-  const bug = BugRepository.create(bugDTO);
+  public createBugService = async (
+    bugDTO: Omit<Bug, "id" | "dateCreated">
+  ): Promise<Bug> => {
+    const bug = this.bugRepository.create(bugDTO);
 
-  const errors = await validate(bug);
-  if (errors.length) throw new Error("Validation Error: Invalid request");
+    const errors = await validate(bug);
+    if (errors.length) throw new Error("Validation Error: Invalid request");
 
-  return await BugRepository.save(bug);
-};
+    return await this.bugRepository.save(bug);
+  };
 
-export const updateBugService = async (
-  id: number,
-  bugDTO: Omit<Bug, "id" | "dateCreated">
-): Promise<Bug> => {
-  validateId(id);
+  public updateBugService = async (
+    id: number,
+    bugDTO: Omit<Bug, "id" | "dateCreated">
+  ): Promise<Bug> => {
+    this.validateId(id);
 
-  let bug = await BugRepository.preload({ ...bugDTO, id: id });
-  if (!bug) throw new Error("Bug not found");
+    let bug = await this.bugRepository.preload({ ...bugDTO, id: id });
+    if (!bug) throw new Error("Bug not found");
 
-  const errors = await validate(bug);
-  if (errors.length) throw new Error("Validation Error: Invalid request");
+    const errors = await validate(bug);
+    if (errors.length) throw new Error("Validation Error: Invalid request");
 
-  return await BugRepository.save(bug);
-};
+    return await this.bugRepository.save(bug);
+  };
 
-export const deleteBugService = async (id: number) => {
-  validateId(id);
+  public deleteBugService = async (id: number) => {
+    this.validateId(id);
 
-  const bug = await getBugByIdService(id);
+    const bug = await this.getBugByIdService(id);
 
-  const result = await BugRepository.remove(bug);
+    const result = await this.bugRepository.remove(bug);
 
-  return result;
-};
+    return result;
+  };
 
-const validateId = (id: number) => {
-  if (id <= 0 || Number.isNaN(id)) throw new Error("Invalid ID"); // to be replaces with invalid request bug
-};
+  private validateId = (id: number) => {
+    if (id <= 0 || Number.isNaN(id)) throw new Error("Invalid ID"); // to be replaces with invalid request bug
+  };
+}

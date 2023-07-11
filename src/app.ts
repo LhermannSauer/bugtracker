@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express from "express";
 import path from "path";
 import "dotenv/config";
@@ -8,6 +9,7 @@ import { AppDataSource } from "./typeorm.config";
 
 const app = express();
 
+// DB
 AppDataSource.initialize()
   .then(async (c) => {
     await c.query(`
@@ -18,10 +20,12 @@ AppDataSource.initialize()
   })
   .catch((e) => console.log(e));
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Routes
 app.use("/", indexRouter);
 app.use("/bugs", bugsRouter);
 
