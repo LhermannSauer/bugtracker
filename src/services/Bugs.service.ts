@@ -57,14 +57,16 @@ export class BugsService implements IBugsService {
   ): Promise<Bug> => {
     this.validateId(id);
 
-    let bug = await this.bugRepository.preload({ ...bugDTO, id: id });
+    let bug = await this.getBugById(id);
     if (!bug) throw new Error("Bug not found");
+
+    this.bugRepository.merge(bug, bugDTO);
 
     const errors = await validate(bug);
     if (errors.length)
       throw new Error("Validation Error: Invalid request" + errors);
 
-    return await this.bugRepository.save(bug);
+    return this.bugRepository.save(bug);
   };
 
   public deleteBug = async (id: number) => {
