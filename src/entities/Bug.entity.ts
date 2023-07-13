@@ -56,6 +56,7 @@ export class Bug implements IBug {
   priority: IPriority;
 
   @ManyToOne(() => Status)
+  @IsNotEmpty()
   status: IStatus;
 
   @ManyToOne(() => Project, (project) => project.bugs, { eager: true })
