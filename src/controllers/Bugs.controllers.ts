@@ -1,10 +1,12 @@
 import { inject, injectable } from "inversify";
 import { Bug } from "../entities/Bug.entity";
-import { IBugsService } from "../interfaces/Bugs.service";
+import { IBugsService } from "../interfaces/IBugsService";
+import { IBugsController } from "../interfaces/IBugsController";
+import TYPES from "../types";
 
 @injectable()
-export class BugsController {
-  @inject("BugsService")
+export class BugsController implements IBugsController {
+  @inject(TYPES.IBugsService)
   private readonly bugsService: IBugsService;
 
   public getBugs = async (): Promise<Bug[]> => {

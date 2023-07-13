@@ -1,8 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+
 import { Bug } from "./Bug.entity";
+import { IProject } from "../interfaces/IProject";
+import { IBug } from "../interfaces/IBug";
 
 @Entity({ name: "projects" })
-export class Project {
+export class Project implements IProject {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,5 +19,5 @@ export class Project {
   manager?: string; // to be switched to User class when implemented
 
   @OneToMany(() => Bug, (bug) => bug.project)
-  bugs: Bug[];
+  bugs: IBug[];
 }

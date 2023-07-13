@@ -1,13 +1,15 @@
 import { validate } from "class-validator";
 
-import { Bug } from "../entities/Bug.entity";
-import { bugsRepository } from "../repositories/Bugs.repo";
 import { inject, injectable } from "inversify";
-import { IBugsService } from "../interfaces/Bugs.service";
+import { IBugsService } from "../interfaces/IBugsService";
+
+import { bugsRepository } from "../repositories/Bugs.repo";
+import { Bug } from "../entities/Bug.entity";
+import TYPES from "../types";
 
 @injectable()
 export class BugsService implements IBugsService {
-  @inject("BugsRepository")
+  @inject(TYPES.BugsRepository)
   private readonly bugRepository: typeof bugsRepository;
 
   public getBugs = async (): Promise<Bug[]> => {
@@ -43,7 +45,8 @@ export class BugsService implements IBugsService {
     const bug = this.bugRepository.create(bugDTO);
 
     const errors = await validate(bug);
-    if (errors.length) throw new Error("Validation Error: Invalid request");
+    if (errors.length)
+      throw new Error("Validation Error: Invalid request" + errors);
 
     return await this.bugRepository.save(bug);
   };
@@ -58,7 +61,8 @@ export class BugsService implements IBugsService {
     if (!bug) throw new Error("Bug not found");
 
     const errors = await validate(bug);
-    if (errors.length) throw new Error("Validation Error: Invalid request");
+    if (errors.length)
+      throw new Error("Validation Error: Invalid request" + errors);
 
     return await this.bugRepository.save(bug);
   };

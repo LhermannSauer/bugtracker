@@ -5,9 +5,6 @@ import {
   CreateDateColumn,
   ManyToOne,
 } from "typeorm";
-import { Priority } from "./Priority.entity";
-import { Status } from "./Status.entity";
-import { Project } from "./Project.entity";
 import {
   IsDateString,
   IsNotEmpty,
@@ -16,8 +13,16 @@ import {
   MinLength,
 } from "class-validator";
 
+import { Priority } from "./Priority.entity";
+import { Status } from "./Status.entity";
+import { Project } from "./Project.entity";
+import { IBug } from "../interfaces/IBug";
+import { IPriority } from "../interfaces/IPriority";
+import { IStatus } from "../interfaces/IStatus";
+import { IProject } from "../interfaces/IProject";
+
 @Entity({ name: "bugs" })
-export class Bug {
+export class Bug implements IBug {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -48,14 +53,14 @@ export class Bug {
 
   @ManyToOne(() => Priority)
   @IsNotEmpty()
-  priority: Priority;
+  priority: IPriority;
 
   @ManyToOne(() => Status)
-  status: Status;
+  status: IStatus;
 
   @ManyToOne(() => Project, (project) => project.bugs, { eager: true })
   @IsNotEmpty()
-  project: Project;
+  project: IProject;
 
   // TO BE REPLACED WITH USER CLASSES
   @Column({ nullable: true })
