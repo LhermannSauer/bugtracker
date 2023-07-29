@@ -1,4 +1,3 @@
-import { IBugsService } from "./IBugsService";
 import { Bug } from "../entities/Bug.entity";
 
 export interface IBugsController {

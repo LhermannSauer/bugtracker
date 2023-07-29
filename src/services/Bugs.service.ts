@@ -3,14 +3,14 @@ import { validate } from "class-validator";
 import { inject, injectable } from "inversify";
 import { IBugsService } from "../interfaces/IBugsService";
 
-import { bugsRepository } from "../repositories/Bugs.repo";
 import { Bug } from "../entities/Bug.entity";
 import TYPES from "../types";
 
+import { AppDataSource } from "../typeorm.config";
+
 @injectable()
 export class BugsService implements IBugsService {
-  @inject(TYPES.BugsRepository)
-  private readonly bugRepository: typeof bugsRepository;
+  private readonly bugRepository = AppDataSource.getRepository(Bug);
 
   public getBugs = async (): Promise<Bug[]> => {
     const bugs = await this.bugRepository.find({
