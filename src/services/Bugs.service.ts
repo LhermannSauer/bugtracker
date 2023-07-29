@@ -7,6 +7,8 @@ import { Bug } from "../entities/Bug.entity";
 import TYPES from "../types";
 
 import { AppDataSource } from "../typeorm.config";
+import { BugDTO } from "../dtos/Bug.dto";
+import { IBug } from "../interfaces/IBug";
 
 @injectable()
 export class BugsService implements IBugsService {
@@ -27,8 +29,6 @@ export class BugsService implements IBugsService {
   };
 
   public getBugById = async (id: number): Promise<Bug> => {
-    this.validateId(id);
-
     const bug = await this.bugRepository.findOne({
       where: { id: id },
       relations: { project: true, priority: true, status: true },
@@ -39,24 +39,17 @@ export class BugsService implements IBugsService {
     return bug;
   };
 
-  public createBug = async (
-    bugDTO: Omit<Bug, "id" | "dateCreated">
-  ): Promise<Bug> => {
-    const bug = this.bugRepository.create(bugDTO);
-
-    const errors = await validate(bug);
+  public createBug = async (bugDTO: BugDTO): Promise<IBug> => {
+    const errors = await validate(bugDTO);
     if (errors.length)
       throw new Error("Validation Error: Invalid request" + errors);
+
+    const bug = this.bugRepository.create(bugDTO);
 
     return await this.bugRepository.save(bug);
   };
 
-  public updateBug = async (
-    id: number,
-    bugDTO: Omit<Bug, "id" | "dateCreated">
-  ): Promise<Bug> => {
-    this.validateId(id);
-
+  public updateBug = async (id: number, bugDTO: BugDTO): Promise<IBug> => {
     let bug = await this.getBugById(id);
     if (!bug) throw new Error("Bug not found");
 
@@ -70,16 +63,8 @@ export class BugsService implements IBugsService {
   };
 
   public deleteBug = async (id: number) => {
-    this.validateId(id);
+    const result = await this.bugRepository.delete({ id: id });
 
-    const bug = await this.getBugById(id);
-
-    const result = await this.bugRepository.remove(bug);
-
-    return result;
-  };
-
-  private validateId = (id: number) => {
-    if (id <= 0 || Number.isNaN(id)) throw new Error("Invalid ID"); // to be replaces with invalid request bug
+    return result.affected ? result.affected > 0 : false;
   };
 }
