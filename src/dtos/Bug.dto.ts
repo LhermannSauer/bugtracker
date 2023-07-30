@@ -1,15 +1,16 @@
 import {
   IsDateString,
-  IsInt,
   IsNotEmpty,
+  IsObject,
   IsOptional,
+  IsString,
   Length,
-  isInt,
+  ValidateNested,
 } from "class-validator";
 
-import { IPriority } from "../interfaces/IPriority";
-import { IStatus } from "../interfaces/IStatus";
-import { IProject } from "../interfaces/IProject";
+import { ProjectDTO } from "./Project.dto";
+import { PriorityDTO } from "./Priority.dto";
+import { StatusDTO } from "./Status.dto";
 
 export class BugDTO {
   @IsNotEmpty()
@@ -29,17 +30,24 @@ export class BugDTO {
   dateCompleted?: Date;
 
   @IsNotEmpty()
-  priority: IPriority;
+  @IsObject()
+  priority: PriorityDTO;
 
   @IsNotEmpty()
-  status: IStatus;
+  @ValidateNested()
+  status: StatusDTO;
 
   @IsNotEmpty()
-  project: IProject;
+  @ValidateNested()
+  project: ProjectDTO;
 
   @IsOptional()
+  @IsString()
+  @Length(3, 255)
   assignedDeveloper?: string;
 
   @IsOptional()
+  @IsString()
+  @Length(3, 255)
   tester?: string;
 }
