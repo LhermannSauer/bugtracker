@@ -1,33 +1,15 @@
 import "reflect-metadata";
 import express from "express";
-import path from "path";
 import "dotenv/config";
 
-import { router as indexRouter } from "./routes/Index";
-import { router as bugsRouter } from "./routes/Bugs";
-import { AppDataSource } from "./typeorm.config";
+import { initMiddleware } from "./init/initMiddleware";
+import { initDB } from "./init/initDB";
 
 const app = express();
 
-// DB
-AppDataSource.initialize()
-  .then(async (c) => {
-    await c.query(`
-                    USE bugtracker_dev;
-                    `);
-
-    console.log("connected to db");
-  })
-  .catch((e) => console.log(e));
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
-
-// Routes
-app.use("/", indexRouter);
-app.use("/bugs", bugsRouter);
+// Init
+initDB();
+initMiddleware(app);
 
 const port = process.env.PORT ?? 3000;
 const server = app.listen(port, () => {

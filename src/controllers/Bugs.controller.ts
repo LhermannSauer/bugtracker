@@ -6,6 +6,7 @@ import { isPositive, validate } from "class-validator";
 import { BugDTO } from "../dtos/Bug.dto";
 import { IBug } from "../interfaces/IBug";
 import _ from "lodash";
+import { InvalidParameterError, NotFoundError } from "../common/errors";
 
 @injectable()
 export class BugsController implements IBugsController {
@@ -19,9 +20,11 @@ export class BugsController implements IBugsController {
   };
 
   public getBugById = async (id: number): Promise<IBug> => {
-    const bug = await this.bugsService.getBugById(id);
+    this.validateId(id);
 
-    if (!bug) throw new Error("Not found: Bug");
+    const bug = await this.bugsService.getBugById(+id);
+
+    if (!bug) throw new NotFoundError("Bug");
 
     return bug;
   };
@@ -32,7 +35,7 @@ export class BugsController implements IBugsController {
 
     const errors = await validate(bugDTO);
     if (errors.length)
-      throw new Error("Validation Error: Invalid request" + errors);
+      if (errors.length) throw new InvalidParameterError(errors[0].toString());
 
     const bug = await this.bugsService.createBug(bugDTO);
 
@@ -46,8 +49,7 @@ export class BugsController implements IBugsController {
     _.assign(bugDTO, data);
 
     const errors = await validate(bugDTO);
-    if (errors.length)
-      throw new Error("Validation Error: Invalid request" + errors);
+    if (errors.length) throw new InvalidParameterError(errors[0].toString());
 
     let bug = await this.bugsService.updateBug(id, bugDTO);
 
@@ -63,6 +65,6 @@ export class BugsController implements IBugsController {
   };
 
   private validateId = (id: number) => {
-    if (!isPositive(id)) throw new Error("Invalid ID"); // to be replaces with invalid request bug
+    if (!isPositive(id)) throw new InvalidParameterError("ID");
   };
 }

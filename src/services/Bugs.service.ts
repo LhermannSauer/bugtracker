@@ -4,11 +4,11 @@ import { inject, injectable } from "inversify";
 import { IBugsService } from "../interfaces/IBugsService";
 
 import { Bug } from "../entities/Bug.entity";
-import TYPES from "../types";
 
 import { AppDataSource } from "../typeorm.config";
 import { BugDTO } from "../dtos/Bug.dto";
 import { IBug } from "../interfaces/IBug";
+import { NotFoundError } from "../common/errors";
 
 @injectable()
 export class BugsService implements IBugsService {
@@ -28,13 +28,13 @@ export class BugsService implements IBugsService {
     return bugs;
   };
 
-  public getBugById = async (id: number): Promise<Bug> => {
+  public getBugById = async (id: number): Promise<IBug> => {
     const bug = await this.bugRepository.findOne({
       where: { id: id },
       relations: { project: true, priority: true, status: true },
     });
 
-    if (!bug) throw new Error("Not found: Bug"); // to be replaced with not found error
+    if (!bug) throw new NotFoundError("Bug"); // to be replaced with not found error
 
     return bug;
   };

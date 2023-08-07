@@ -1,6 +1,6 @@
 import { Container } from "inversify";
 import { BugsService } from "./services/Bugs.service";
-import { BugsController } from "./controllers/Bugs.controllers";
+import { BugsController } from "./controllers/Bugs.controller";
 import { IBugsService } from "./interfaces/IBugsService";
 import { IBugsController } from "./interfaces/IBugsController";
 import TYPES from "./types";
