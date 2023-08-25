@@ -5,14 +5,18 @@ import { IBugsService } from "../interfaces/IBugsService";
 
 import { Bug } from "../entities/Bug.entity";
 
-import { AppDataSource } from "../typeorm.config";
 import { BugDTO } from "../dtos/Bug.dto";
 import { IBug } from "../interfaces/IBug";
 import { NotFoundError } from "../common/errors";
+import { Repository } from "typeorm";
+import TYPES from "../types";
 
 @injectable()
 export class BugsService implements IBugsService {
-  private readonly bugRepository = AppDataSource.getRepository(Bug);
+  private bugRepository: Repository<Bug>;
+  constructor(@inject(TYPES.BugRepository) bugRepository: Repository<Bug>) {
+    this.bugRepository = bugRepository;
+  }
 
   public getBugs = async (): Promise<Bug[]> => {
     const bugs = await this.bugRepository.find({
@@ -51,7 +55,7 @@ export class BugsService implements IBugsService {
 
   public updateBug = async (id: number, bugDTO: BugDTO): Promise<IBug> => {
     let bug = await this.getBugById(id);
-    if (!bug) throw new Error("Bug not found");
+    if (!bug) throw new NotFoundError("Bug");
 
     this.bugRepository.merge(bug, bugDTO);
 
