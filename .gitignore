@@ -76,6 +76,7 @@ web_modules/
 # dotenv environment variable files
 .env
 .env.development.local
+.env.dev
 .env.test.local
 .env.production.local
 .env.local
@@ -138,4 +139,9 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+
+###
+
 *.drawio
+dist/
+bin/

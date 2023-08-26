@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  title: Bug API
+  description: This API provides endpoints for managing bugs.
+  version: 1.0.0
+
+paths:
+  /bugs:
+    get:
+      summary: Get all bugs.
+      operationId: getBugs
+      responses:
+        200:
+          description: A list of bugs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bug"
+    post:
+      summary: Create a new bug
+      operationId: createBug
+      responses:
+        200:
+          description: The new bug
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bug"
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+
+  /bugs/{id}:
+    get:
+      summary: Get a bug by ID.
+      operationId: getBugById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A bug.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bug"
+        404:
+          description: Bug not found
+        400:
+          description: Invalid ID
+    delete:
+      summary: Deletes a bug
+      operationId: deleteBug
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: No content.
+        400:
+          description: Invalid ID
+    put:
+      summary: Edit the bug's information
+      operationId: updateBug
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Bug updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bug"
+        404:
+          description: Bug not found
+        400:
+          description: Invalid request
+
+
+
+components:
+  schemas:
+    Bug:
+      type: object
+      properties:
+        id: 
+          type: integer
+        title:
+          type: string
+          minLength: 10
+          maxLength: 255
+          example: "Bug 01 Title"
+        description:
+          type: string
+          minLength: 10
+          maxLength: 5000
+          example: "The description of the bug"
+        dueDate:
+          type: string
+          format: date
+          nullable: true
+        dateCompleted:
+          type: string
+          format: date
+          nullable: true
+        priority:
+          $ref: "#/components/schemas/Priority"
+        status:
+          $ref: "#/components/schemas/Status"
+        project:
+          $ref: "#/components/schemas/Project"
+        assignedDeveloper:
+          type: string
+          minLength: 3
+          maxLength: 255
+          nullable: true
+        tester:
+          type: string
+          minLength: 3
+          maxLength: 255
+          nullable: true
+
+    Project:
+      type: object
+      properties:
+        id: 
+          type: integer
+        name:
+          type: string
+          minLength: 10
+          maxLength: 255
+        description:
+          type: string
+          minLength: 10
+          maxLength: 5000
+        bugs: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Bug'
+
+
+    Priority:
+      type: object
+      properties:
+        id: 
+          type: integer
+        name:
+          type: string
+          enum:
+            - Low
+            - Medium
+            - High
+
+    Status:
+      type: object
+      properties:
+        id: 
+          type: integer
+        name:
+          type: string
+          enum:
+            - Open
+            - In Progress
+            - Closed
