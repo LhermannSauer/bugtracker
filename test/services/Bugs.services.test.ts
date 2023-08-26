@@ -2,7 +2,6 @@ import { Bug } from "../../src/entities/Bug.entity";
 import { BugsService } from "../../src/services/Bugs.service";
 import { NotFoundError } from "../../src/common/errors";
 import { Repository } from "typeorm";
-import { validate } from "class-validator";
 
 const mockBugs: Bug[] = [
   {
@@ -33,12 +32,6 @@ const bugRepository = {
   merge: jest.fn(),
   delete: jest.fn(),
 };
-
-const validateMock = jest.fn();
-
-jest.mock("class-validator", () => ({
-  validate: () => validateMock(),
-}));
 
 let bugsService: BugsService;
 
@@ -98,8 +91,6 @@ describe("BugsService", () => {
 
   describe("createBug", () => {
     it("should create a bug when a valid request is sent", async () => {
-      validateMock.mockResolvedValueOnce([]);
-
       bugRepository.create.mockReturnValueOnce(mockBugs[0]);
       bugRepository.save.mockResolvedValueOnce(mockBugs[0]);
 
@@ -110,17 +101,6 @@ describe("BugsService", () => {
       expect(bugRepository.create).toBeCalledWith(mockBugs[0]);
       expect(bugRepository.save).toBeCalledTimes(1);
       expect(bugRepository.save).toBeCalledWith(mockBugs[0]);
-      expect(validateMock).toHaveBeenCalledTimes(1);
-    });
-
-    it("should throw when an invalid request is sent", () => {
-      validateMock.mockResolvedValueOnce([1, 2]);
-
-      const shouldThrow = async () => {
-        const actual = await bugsService.createBug(mockBugs[1]);
-      };
-
-      expect(shouldThrow).rejects.toBeInstanceOf(Error);
     });
   });
 
@@ -128,29 +108,16 @@ describe("BugsService", () => {
     it("should update a bug with a valid request", async () => {
       bugRepository.findOne.mockResolvedValueOnce(mockBugs[0]);
       bugRepository.save.mockResolvedValueOnce(mockBugs[1]);
-      validateMock.mockResolvedValueOnce([]);
 
       const actual = await bugsService.updateBug(1, mockBugs[1]);
 
       expect(actual).toEqual(mockBugs[1]);
-      // expect(validateMock).toHaveBeenCalledWith(mockBugs[1]);
       expect(bugRepository.findOne).toBeCalled();
       expect(bugRepository.merge).toBeCalledWith(mockBugs[0], mockBugs[1]);
       expect(bugRepository.save).toBeCalled();
     });
 
-    it("should throw with an invalid request", () => {
-      validateMock.mockResolvedValueOnce([1]);
-      bugRepository.findOne.mockResolvedValueOnce(mockBugs[0]);
-
-      const shouldThrow = async () => {
-        const actual = await bugsService.updateBug(1, mockBugs[1]);
-      };
-
-      expect(shouldThrow).rejects.toBeInstanceOf(Error);
-    });
     it("should throw with an invalid id", () => {
-      validateMock.mockResolvedValueOnce([1]);
       bugRepository.findOne.mockResolvedValueOnce(null);
 
       const shouldThrow = async () => {

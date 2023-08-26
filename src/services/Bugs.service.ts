@@ -1,5 +1,3 @@
-import { validate } from "class-validator";
-
 import { inject, injectable } from "inversify";
 import { IBugsService } from "../interfaces/IBugsService";
 
@@ -44,10 +42,6 @@ export class BugsService implements IBugsService {
   };
 
   public createBug = async (bugDTO: BugDTO): Promise<IBug> => {
-    const errors = await validate(bugDTO);
-    if (errors.length)
-      throw new Error("Validation Error: Invalid request" + errors);
-
     const bug = this.bugRepository.create(bugDTO);
 
     return await this.bugRepository.save(bug);
@@ -58,10 +52,6 @@ export class BugsService implements IBugsService {
     if (!bug) throw new NotFoundError("Bug");
 
     this.bugRepository.merge(bug, bugDTO);
-
-    const errors = await validate(bug);
-    if (errors.length)
-      throw new Error("Validation Error: Invalid request" + errors);
 
     return this.bugRepository.save(bug);
   };

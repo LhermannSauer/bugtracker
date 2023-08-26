@@ -24,8 +24,6 @@ export class BugsController implements IBugsController {
 
     const bug = await this.bugsService.getBugById(+id);
 
-    if (!bug) throw new NotFoundError("Bug");
-
     return bug;
   };
 
@@ -34,8 +32,7 @@ export class BugsController implements IBugsController {
     _.assign(bugDTO, data);
 
     const errors = await validate(bugDTO);
-    if (errors.length)
-      if (errors.length) throw new InvalidParameterError(errors[0].toString());
+    if (errors.length) throw new InvalidParameterError(errors[0].toString());
 
     const bug = await this.bugsService.createBug(bugDTO);
 
