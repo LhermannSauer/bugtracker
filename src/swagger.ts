@@ -1,10 +1,15 @@
-import fs from "fs";
-import path from "path";
-import YAML from "yaml";
+import swaggerJSDoc from "swagger-jsdoc";
+import { SwaggerOptions } from "swagger-ui-express";
 
-const swaggerFile = fs.readFileSync(
-  path.join(__dirname, "/swagger.yaml"),
-  "utf8"
-);
+const options: SwaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Bugtracker",
+      version: "0.0.1",
+    },
+  },
+  apis: ["**/*.ts"],
+};
 
-export const swaggerSpec = YAML.parse(swaggerFile);
+export const openapiSpecification = swaggerJSDoc(options);

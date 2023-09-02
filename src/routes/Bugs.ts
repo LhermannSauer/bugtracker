@@ -48,8 +48,8 @@ router.put(
 router.delete(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
-    const deletedBug = await bugsController.deleteBug(+req.params.id);
+    const result = await bugsController.deleteBug(+req.params.id);
 
-    res.send(deletedBug);
+    res.send(result);
   })
 );

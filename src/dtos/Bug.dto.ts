@@ -12,6 +12,48 @@ import { ProjectDTO } from "./Project.dto";
 import { PriorityDTO } from "./Priority.dto";
 import { StatusDTO } from "./Status.dto";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Bug:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           minLength: 10
+ *           maxLength: 255
+ *           example: DB connection lost
+ *         description:
+ *           type: string
+ *           minLength: 10
+ *           maxLength: 5000
+ *           example: App does not connect to database
+ *         dueDate:
+ *           type: string
+ *           format: date
+ *         dateCompleted:
+ *           type: string
+ *           format: date
+ *         priority:
+ *           $ref: '#/components/schemas/Priority'
+ *         status:
+ *           $ref: '#/components/schemas/Status'
+ *         project:
+ *           $ref: '#/components/schemas/Project'
+ *         assignedDeveloper:
+ *           type: string
+ *           minLength: 3
+ *           maxLength: 255
+ *           example: Mary Jane
+ *         tester:
+ *           type: string
+ *           minLength: 3
+ *           maxLength: 255
+ *           example: Joe Doe
+ *
+ *
+ */
 export class BugDTO {
   @IsNotEmpty()
   @Length(10, 255)
