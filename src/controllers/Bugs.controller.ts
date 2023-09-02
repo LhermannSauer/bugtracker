@@ -6,7 +6,7 @@ import { isPositive, validate } from "class-validator";
 import { BugDTO } from "../dtos/Bug.dto";
 import { IBug } from "../interfaces/IBug";
 import _ from "lodash";
-import { InvalidParameterError, NotFoundError } from "../common/errors";
+import { InvalidParameterError } from "../common/errors";
 
 @injectable()
 export class BugsController implements IBugsController {

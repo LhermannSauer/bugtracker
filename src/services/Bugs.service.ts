@@ -44,12 +44,11 @@ export class BugsService implements IBugsService {
   public createBug = async (bugDTO: BugDTO): Promise<IBug> => {
     const bug = this.bugRepository.create(bugDTO);
 
-    return await this.bugRepository.save(bug);
+    return this.bugRepository.save(bug);
   };
 
   public updateBug = async (id: number, bugDTO: BugDTO): Promise<IBug> => {
     let bug = await this.getBugById(id);
-    if (!bug) throw new NotFoundError("Bug");
 
     this.bugRepository.merge(bug, bugDTO);
 
