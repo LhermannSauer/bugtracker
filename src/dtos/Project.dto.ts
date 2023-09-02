@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString, Length, ValidateNested } from "class-validator";
 import { BugDTO } from "./Bug.dto";
+import { UserDTO } from "./User.dto";
 
 /**
  * @swagger
@@ -47,7 +48,7 @@ export class ProjectDTO {
   @IsNotEmpty()
   @IsString()
   @Length(3, 255)
-  manager?: string; // to be switched to User class when implemented
+  manager?: UserDTO; // to be switched to User class when implemented
 
   @ValidateNested()
   bugs: BugDTO[];
