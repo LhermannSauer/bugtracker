@@ -13,23 +13,20 @@ export class BugsController implements IBugsController {
   @inject(TYPES.IBugsService)
   private readonly bugsService: IBugsService;
 
-  public getBugs = async (): Promise<IBug[]> => {
-    const bugs = await this.bugsService.getBugs();
-
-    return bugs;
-  };
+  public getBugs = async (): Promise<IBug[]> => this.bugsService.getBugs();
 
   public getBugById = async (id: number): Promise<IBug> => {
     this.validateId(id);
 
+    // NOTE: No need to cast +id
     const bug = await this.bugsService.getBugById(+id);
 
     return bug;
   };
 
-  public createBug = async (data: BugDTO): Promise<IBug> => {
-    let bugDTO: BugDTO = new BugDTO();
-    _.assign(bugDTO, data);
+  public createBug = async (bugDTO: BugDTO): Promise<IBug> => {
+    // let bugDTO: BugDTO = new BugDTO();
+    // _.assign(bugDTO, budDTO);
 
     const errors = await validate(bugDTO);
     if (errors.length) throw new InvalidParameterError(errors[0].toString());

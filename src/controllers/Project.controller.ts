@@ -30,13 +30,10 @@ export class ProjectController implements IProjectController {
   };
 
   createProject = async (projectDTO: ProjectDTO): Promise<IProject> => {
-    let newProject: ProjectDTO = new ProjectDTO();
-    _.assign(newProject, projectDTO);
-
-    const errors = await validate(newProject);
+    const errors = await validate(projectDTO);
     if (errors.length) throw new InvalidParameterError(errors[0].property);
 
-    const project = await this.projectService.createProject(newProject);
+    const project = await this.projectService.createProject(projectDTO);
 
     return project;
   };

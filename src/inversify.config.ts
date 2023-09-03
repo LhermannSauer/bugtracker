@@ -14,6 +14,8 @@ import { IProjectService } from "./interfaces/IProjectService";
 import { ProjectService } from "./services/Project.service";
 import { IProjectController } from "./interfaces/IProjecController";
 import { ProjectController } from "./controllers/Project.controller";
+import { User } from "./entities/User.entity";
+import { userRepository } from "./repositories/User.repo";
 
 export const container = new Container();
 container.bind<IBugsService>(TYPES.IBugsService).to(BugsService);
@@ -30,3 +32,9 @@ container.bind<IProjectService>(TYPES.IProjectsService).to(ProjectService);
 container
   .bind<IProjectController>(TYPES.IProjectController)
   .to(ProjectController);
+
+// container.bind<IBugsService>(TYPES.IBugsService).to(BugsService);
+// container.bind<IBugsController>(TYPES.IBugsController).to(BugsController);
+container
+  .bind<Repository<User>>(TYPES.UserRepository)
+  .toConstantValue(userRepository);
