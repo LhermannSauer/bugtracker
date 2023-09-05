@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { isPositive, validate } from "class-validator";
-import _ from "lodash";
+import { plainToClass } from "class-transformer";
 
 import TYPES from "../types";
 
@@ -30,6 +30,8 @@ export class ProjectController implements IProjectController {
   };
 
   createProject = async (projectDTO: ProjectDTO): Promise<IProject> => {
+    projectDTO = plainToClass(ProjectDTO, projectDTO);
+
     const errors = await validate(projectDTO);
     if (errors.length) throw new InvalidParameterError(errors[0].property);
 
@@ -39,14 +41,12 @@ export class ProjectController implements IProjectController {
   };
 
   updateProject = async (id: number, projectDTO: ProjectDTO) => {
-    const project = await this.getProjectById(id);
+    projectDTO = plainToClass(ProjectDTO, projectDTO);
 
-    _.assign(project, projectDTO);
-
-    const errors = await validate(project);
+    const errors = await validate(projectDTO);
     if (errors.length) throw new InvalidParameterError(errors[0].property);
 
-    await this.projectService.updateProject(id, project);
+    const project = await this.projectService.updateProject(id, projectDTO);
 
     return project;
   };

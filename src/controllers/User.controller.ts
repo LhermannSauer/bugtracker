@@ -1,4 +1,4 @@
-import { LoginDTO } from "../dtos/Login.dts";
+import { LoginDTO } from "../dtos/Login.dto";
 import { UserDTO } from "../dtos/User.dto";
 import { User } from "../entities/User.entity";
 import { IUserController } from "../interfaces/IUserController";
