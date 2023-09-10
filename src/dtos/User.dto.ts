@@ -1,6 +1,7 @@
-import { Length, Matches } from "class-validator";
+import { IsEmail, Length, Matches } from "class-validator";
 
 export class UserDTO {
+  @IsEmail()
   @Length(5, 50, { message: "Username must be between 5 and 50 characters." })
   username: string;
 

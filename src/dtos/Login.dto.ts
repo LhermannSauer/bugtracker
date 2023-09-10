@@ -1,7 +1,8 @@
-import { Length, Matches } from "class-validator";
+import { IsEmail, Length, Matches } from "class-validator";
 
 export class LoginDTO {
   @Length(5, 50, { message: "Username must be between 5 and 50 characters." })
+  @IsEmail()
   username: string;
 
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
