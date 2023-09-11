@@ -14,6 +14,12 @@ export class User {
   password: string;
 
   @Column()
+  name:string;
+
+  @Column()
+  profilePicture:string;
+
+  @Column()
   role: "Tester" | "Dev" | "Manager" | "Admin";
 
   @OneToMany(() => Bug, (bug) => bug.assignedDeveloper)

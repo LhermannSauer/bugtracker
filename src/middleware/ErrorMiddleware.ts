@@ -9,7 +9,7 @@ export function errorMiddleware(app: Express): void {
     if (error instanceof InvalidParameterError) {
       res.status(400).send({ error: error.message });
     } else {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Internal Server Error " + error.message});
     }
   });
 }

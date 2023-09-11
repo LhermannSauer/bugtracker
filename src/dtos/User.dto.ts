@@ -1,4 +1,4 @@
-import { IsEmail, Length, Matches } from "class-validator";
+import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches } from "class-validator";
 
 export class UserDTO {
   @IsEmail()
@@ -10,6 +10,13 @@ export class UserDTO {
       "password must contain at least 1 letter, 1 number, 1 special character, and have a length of at least 8 characters.",
   })
   password: string;
+
+  @Length(3,20)
+  name: string
+
+  @IsUrl()
+  @IsOptional()
+  profilePicture: string
 
   role: "Tester" | "Dev" | "Manager" | "Admin";
 }
