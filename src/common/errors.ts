@@ -13,11 +13,15 @@ export class InvalidParameterError extends Error {
 }
 
 export class ValidationError extends Error {
-  /**
-   *
-   */
   constructor(message: string) {
     super();
     this.message = message;
+  }
+}
+
+export class ExistingUserError extends Error {
+  constructor() {
+    super();
+    this.message = "Username already exists";
   }
 }

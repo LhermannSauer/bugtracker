@@ -8,5 +8,5 @@ export interface IUserController {
   createUser: (userDTO: UserDTO) => Promise<User>;
   updateUser: (id: string, userDTO: UserDTO) => Promise<User>;
   deleteUser: (id: string) => Promise<boolean>;
-  login: (loginDTO: LoginDTO) => void;
+  login: (loginDTO: LoginDTO) => Promise<User>;
 }

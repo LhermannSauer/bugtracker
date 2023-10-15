@@ -1,4 +1,11 @@
-import { IsEmail, IsOptional, IsString, IsUrl, Length, Matches } from "class-validator";
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Length,
+  Matches,
+} from "class-validator";
 
 export class UserDTO {
   @IsEmail()
@@ -11,12 +18,11 @@ export class UserDTO {
   })
   password: string;
 
-  @Length(3,20)
-  name: string
+  @Length(3, 20)
+  name: string;
 
-  @IsUrl()
   @IsOptional()
-  profilePicture: string
+  profilePicture: string;
 
   role: "Tester" | "Dev" | "Manager" | "Admin";
 }

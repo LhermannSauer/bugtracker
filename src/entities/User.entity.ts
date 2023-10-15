@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Bug } from "./Bug.entity";
 import { Project } from "./Project.entity";
 
-@Entity()
+@Entity("Users")
 export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -14,10 +14,10 @@ export class User {
   password: string;
 
   @Column()
-  name:string;
+  name: string;
 
   @Column()
-  profilePicture:string;
+  profilePicture?: string;
 
   @Column()
   role: "Tester" | "Dev" | "Manager" | "Admin";
