@@ -1,6 +1,6 @@
 import { Router } from "express";
 import asyncMiddleware from "../middleware/AsyncMiddleware";
-import {} from "class-validator";
+import { instanceToPlain } from "class-transformer";
 import { container } from "../inversify.config";
 import { IUserController } from "../interfaces/IUserController";
 import TYPES from "../types";
@@ -17,7 +17,7 @@ router.post(
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.createUser(req.body);
 
-    const token = jwt.sign(user, privateKey);
+    const token = jwt.sign(instanceToPlain(user), privateKey);
 
     res.header({ "x-auth-token": token }).status(200).send();
   })
@@ -28,7 +28,7 @@ router.post(
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.login(req.body);
 
-    const token = jwt.sign(user, privateKey);
+    const token = jwt.sign(instanceToPlain(user), privateKey);
 
     res.header({ "x-auth-token": token }).status(200).send();
   })

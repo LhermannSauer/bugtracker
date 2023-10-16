@@ -40,15 +40,12 @@ export class UserController implements IUserController {
 
   updateUser = async (id: string, userDTO: UserDTO): Promise<User> => {
     this.validateId(id);
-
     userDTO = plainToClass(UserDTO, userDTO);
 
     const errors = await validate(userDTO);
     if (errors) throw new InvalidParameterError(errors[0].toString());
 
-    bcrypt.hash(userDTO.password, saltRounds, (err, hash) => {
-      userDTO.password = hash;
-    });
+    userDTO.password = await bcrypt.hash(userDTO.password, saltRounds);
 
     const user = await this.userService.updateUser(id, userDTO);
 
