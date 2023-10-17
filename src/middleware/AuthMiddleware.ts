@@ -1,41 +1,46 @@
-import { decode} from 'jsonwebtoken'
-import { Request, Response } from 'express'
-import { User } from '../entities/User.entity';
-import {plainToClass}from 'class-transformer'
+import { decode } from "jsonwebtoken";
+import { Request, Response } from "express";
+import { User } from "../entities/User.entity";
+import { plainToClass } from "class-transformer";
+import { ForbiddenError, UnauthorizedError } from "../common/errors";
 
-export const authMiddleware = (req:Request, res: Response, next: Function) =>{
-    const token: string = req.headers['authorization'] ?? ''
-    let user: User;
-    
-    if (!token){
-        res.status(401).send("Unauthorized")
-    }
+export const authMiddleware = (req: Request, res: Response, next: Function) => {
+  const token = req.headers["x-auth-token"] as string;
+  let user: User;
 
-    try {
-        const decoded = decode(token)
-        user =  plainToClass(User, decoded)
-    } catch (error) {
-        res.status(401).send("Unauthorized")
-    }
+  if (!token) {
+    throw new UnauthorizedError();
+  }
 
-    next()
-}
+  try {
+    const decoded = decode(token);
+    user = plainToClass(User, decoded);
+  } catch (error) {
+    throw new UnauthorizedError();
+  }
 
-export const adminMiddleware = (req:Request, res: Response, next: Function) =>{
-    const token: string = req.headers['authorization'] ?? ''
-    let user: User;
-    
-    if (!token){
-        res.status(401).send("Unauthorized")
-    }
+  next();
+};
 
-    try {
-        const decoded = decode(token)
-        user =  plainToClass(User, decoded)
-        if (user.role != "Admin") res.status(403).send("Need Admin Privileges")
-    } catch (error) {
-        res.status(401).send("Unauthorized")
-    }
+export const adminMiddleware = (
+  req: Request,
+  res: Response,
+  next: Function
+) => {
+  const token = req.headers["x-auth-token"] as string;
+  let user: User;
 
-    next()
-}
+  if (!token) {
+    throw new UnauthorizedError();
+  }
+
+  try {
+    const decoded = decode(token);
+    user = plainToClass(User, decoded);
+    if (user.role != "Admin") throw new ForbiddenError();
+  } catch (error) {
+    throw new UnauthorizedError();
+  }
+
+  next();
+};

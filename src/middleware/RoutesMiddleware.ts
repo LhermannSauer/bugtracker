@@ -7,12 +7,13 @@ import { router as bugsRouter } from "../routes/Bugs";
 import { router as usersRouter } from "../routes/Users";
 import { router as projectsRouter } from "../routes/Projects";
 import { router as authRouter } from "../routes/Auth";
+import { adminMiddleware, authMiddleware } from "./AuthMiddleware";
 
 export function routesMiddleware(app: Express) {
   app.use("/", indexRouter);
   app.use("/", authRouter);
-  app.use("/api/projects", projectsRouter);
-  app.use("/api/bugs", bugsRouter);
-  app.use("/api/users", usersRouter);
+  app.use("/api/projects", authMiddleware, projectsRouter);
+  app.use("/api/bugs", authMiddleware, bugsRouter);
+  app.use("/api/users", adminMiddleware, usersRouter);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 }

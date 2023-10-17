@@ -25,3 +25,17 @@ export class ExistingUserError extends Error {
     this.message = "Username already exists";
   }
 }
+
+export class UnauthorizedError extends Error {
+  constructor() {
+    super();
+    this.message = "You aRe not authorized to access this site";
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor() {
+    super();
+    this.message = "You lack the required credentials to access this site.";
+  }
+}
