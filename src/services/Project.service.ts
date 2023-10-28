@@ -1,24 +1,25 @@
-import { ProjectDTO } from "../dtos/Project.dto";
-import { Project } from "../entities/Project.entity";
-import { IProjectService } from "../interfaces/IProjectService";
-import { Repository } from "typeorm";
 import { inject, injectable } from "inversify";
+import { Repository } from "typeorm";
+
 import TYPES from "../types";
 import { NotFoundError } from "../common/errors";
+import { IProjectService } from "../interfaces/IProjectService";
+import { IProject } from "../interfaces/IProject";
+import { ProjectDTO } from "../dtos/Project.dto";
 
 @injectable()
 export class ProjectService implements IProjectService {
   constructor(
     @inject(TYPES.ProjectRepository)
-    private readonly projectRepo: Repository<Project>
+    private readonly projectRepo: Repository<IProject>
   ) {}
 
-  getProjects = async (): Promise<Project[]> => {
+  getProjects = async (): Promise<IProject[]> => {
     const projects = await this.projectRepo.find();
     return projects;
   };
 
-  getProjectById = async (id: number): Promise<Project> => {
+  getProjectById = async (id: number): Promise<IProject> => {
     const project = await this.projectRepo.findOne({
       where: { id: id },
       relations: { bugs: true },
@@ -29,7 +30,7 @@ export class ProjectService implements IProjectService {
     return project;
   };
 
-  createProject = async (projectDTO: ProjectDTO): Promise<Project> => {
+  createProject = async (projectDTO: ProjectDTO): Promise<IProject> => {
     const project = this.projectRepo.create(projectDTO);
 
     return this.projectRepo.save(project);
@@ -38,7 +39,7 @@ export class ProjectService implements IProjectService {
   updateProject = async (
     id: number,
     projecDTO: ProjectDTO
-  ): Promise<Project> => {
+  ): Promise<IProject> => {
     let project = await this.getProjectById(id);
 
     this.projectRepo.merge(project, projecDTO);

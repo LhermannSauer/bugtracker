@@ -22,6 +22,7 @@ export class UserDTO {
   name: string;
 
   @IsOptional()
+  @IsUrl()
   profilePicture: string;
 
   role: "Tester" | "Dev" | "Manager" | "Admin";

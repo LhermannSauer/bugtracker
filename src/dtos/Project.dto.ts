@@ -45,7 +45,6 @@ export class ProjectDTO {
   @Length(10, 5000)
   description: string;
 
-  @IsNotEmpty()
   @ValidateNested()
   manager?: UserDTO; // to be switched to User class when implemented
 

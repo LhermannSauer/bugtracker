@@ -5,10 +5,10 @@ import { container } from "../inversify.config";
 import TYPES from "../types";
 import { IUserController } from "../interfaces/IUserController";
 
-export const router: Router = Router();
+export const usersRouter = Router();
 const userController = container.get<IUserController>(TYPES.IUserController);
 
-router.get(
+usersRouter.get(
   "/",
   asyncMiddleware(async (req, res, next) => {
     const users = await userController.getUsers();
@@ -17,7 +17,7 @@ router.get(
   })
 );
 
-router.get(
+usersRouter.get(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.getUser(req.params.id);
@@ -26,7 +26,7 @@ router.get(
   })
 );
 
-router.post(
+usersRouter.post(
   "/",
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.createUser(req.body);
@@ -35,7 +35,7 @@ router.post(
   })
 );
 
-router.put(
+usersRouter.put(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.updateUser(req.params.id, req.body);
@@ -44,7 +44,7 @@ router.put(
   })
 );
 
-router.delete(
+usersRouter.delete(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const result = await userController.deleteUser(req.params.id);

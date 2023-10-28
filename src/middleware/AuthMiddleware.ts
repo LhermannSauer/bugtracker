@@ -1,12 +1,14 @@
-import { decode } from "jsonwebtoken";
 import { Request, Response } from "express";
-import { User } from "../entities/User.entity";
 import { plainToClass } from "class-transformer";
+import { decode } from "jsonwebtoken";
+
 import { ForbiddenError, UnauthorizedError } from "../common/errors";
+import { User } from "../entities/User.entity";
+import { IUser } from "../interfaces/IUser";
 
 export const authMiddleware = (req: Request, res: Response, next: Function) => {
   const token = req.headers["x-auth-token"] as string;
-  let user: User;
+  let user: IUser;
 
   if (!token) {
     throw new UnauthorizedError();

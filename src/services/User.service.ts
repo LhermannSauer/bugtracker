@@ -1,12 +1,12 @@
 import { Repository } from "typeorm";
 import { inject, injectable } from "inversify";
 
+import TYPES from "../types";
 import { ExistingUserError, NotFoundError } from "../common/errors";
 import { IUserService } from "../interfaces/IUserService";
 import { LoginDTO } from "../dtos/Login.dto";
 import { UserDTO } from "../dtos/User.dto";
 import { User } from "../entities/User.entity";
-import TYPES from "../types";
 
 @injectable()
 export class UserService implements IUserService {
@@ -52,7 +52,7 @@ export class UserService implements IUserService {
       where: { username: loginDTO.username, password: loginDTO.password },
     });
 
-    if (!user) throw new NotFoundError("user");
+    if (!user) throw new NotFoundError("User");
 
     return user;
   };

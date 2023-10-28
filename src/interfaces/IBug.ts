@@ -1,7 +1,7 @@
-import { Project } from "../entities/Project.entity";
-import { Status } from "../entities/Status.entity";
-import { User } from "../entities/User.entity";
 import { IPriority } from "./IPriority";
+import { IProject } from "./IProject";
+import { IStatus } from "./IStatus";
+import { IUser } from "./IUser";
 
 export interface IBug {
   id: number;
@@ -11,8 +11,8 @@ export interface IBug {
   dueDate?: Date;
   dateCompleted?: Date;
   priority: IPriority;
-  status: Status;
-  project: Project;
-  assignedDeveloper?: User;
-  tester?: User;
+  status: IStatus;
+  project: IProject;
+  assignedDeveloper?: IUser;
+  tester?: IUser;
 }

@@ -1,18 +1,19 @@
+import jwt from "jsonwebtoken";
 import { Router } from "express";
-import asyncMiddleware from "../middleware/AsyncMiddleware";
 import { instanceToPlain } from "class-transformer";
+
+import TYPES from "../types";
+import asyncMiddleware from "../middleware/AsyncMiddleware";
 import { container } from "../inversify.config";
 import { IUserController } from "../interfaces/IUserController";
-import TYPES from "../types";
-import jwt from "jsonwebtoken";
 
-export const router: Router = Router();
+export const authRouter = Router();
 const userController = container.get<IUserController>(TYPES.IUserController);
 
 if (!process.env.JWTPRIVATEKEY) throw new Error("PrivateKey is required");
 const privateKey = process.env.JWTPRIVATEKEY;
 
-router.post(
+authRouter.post(
   "/signup",
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.createUser(req.body);
@@ -23,7 +24,7 @@ router.post(
   })
 );
 
-router.post(
+authRouter.post(
   "/login",
   asyncMiddleware(async (req, res, next) => {
     const user = await userController.login(req.body);

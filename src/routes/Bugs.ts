@@ -1,15 +1,15 @@
 import { Router } from "express";
-import _ from "lodash";
 
 import asyncMiddleware from "../middleware/AsyncMiddleware";
-import { container } from "../inversify.config";
-import { IBugsController } from "../interfaces/IBugsController";
 import TYPES from "../types";
 
-export const router: Router = Router();
+import { container } from "../inversify.config";
+import { IBugsController } from "../interfaces/IBugsController";
+
+export const bugsRouter = Router();
 const bugsController = container.get<IBugsController>(TYPES.IBugsController);
 
-router.get(
+bugsRouter.get(
   "/",
   asyncMiddleware(async (req, res, next) => {
     const bugs = await bugsController.getBugs();
@@ -18,7 +18,7 @@ router.get(
   })
 );
 
-router.get(
+bugsRouter.get(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const bug = await bugsController.getBugById(+req.params.id);
@@ -27,7 +27,7 @@ router.get(
   })
 );
 
-router.post(
+bugsRouter.post(
   "/",
   asyncMiddleware(async (req, res, next) => {
     const bug = await bugsController.createBug(req.body);
@@ -36,7 +36,7 @@ router.post(
   })
 );
 
-router.put(
+bugsRouter.put(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const bug = await bugsController.updateBug(+req.params.id, req.body);
@@ -45,7 +45,7 @@ router.put(
   })
 );
 
-router.delete(
+bugsRouter.delete(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const result = await bugsController.deleteBug(+req.params.id);

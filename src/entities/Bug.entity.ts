@@ -14,6 +14,7 @@ import { IPriority } from "../interfaces/IPriority";
 import { IStatus } from "../interfaces/IStatus";
 import { IProject } from "../interfaces/IProject";
 import { User } from "./User.entity";
+import { IUser } from "../interfaces/IUser";
 
 @Entity({ name: "bugs" })
 export class Bug implements IBug {
@@ -45,8 +46,8 @@ export class Bug implements IBug {
   project: IProject;
 
   @ManyToOne(() => User, (user) => user.bugsAssigned)
-  assignedDeveloper?: User;
+  assignedDeveloper?: IUser;
 
   @ManyToOne(() => User, (user) => user.bugsAssigned)
-  tester?: User;
+  tester?: IUser;
 }

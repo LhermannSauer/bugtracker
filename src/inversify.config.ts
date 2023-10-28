@@ -1,10 +1,11 @@
 import "reflect-metadata";
 import { Container } from "inversify";
-import { BugsService } from "./services/Bugs.service";
+
+import TYPES from "./types";
+import { BugService } from "./services/Bug.service";
 import { BugsController } from "./controllers/Bugs.controller";
 import { IBugsService } from "./interfaces/IBugsService";
 import { IBugsController } from "./interfaces/IBugsController";
-import TYPES from "./types";
 import { Repository } from "typeorm";
 import { Bug } from "./entities/Bug.entity";
 import { bugRepository } from "./repositories/Bugs.repo";
@@ -22,7 +23,7 @@ import { IUserController } from "./interfaces/IUserController";
 import { UserController } from "./controllers/User.controller";
 
 export const container = new Container();
-container.bind<IBugsService>(TYPES.IBugsService).to(BugsService);
+container.bind<IBugsService>(TYPES.IBugsService).to(BugService);
 container.bind<IBugsController>(TYPES.IBugsController).to(BugsController);
 container
   .bind<Repository<Bug>>(TYPES.BugRepository)

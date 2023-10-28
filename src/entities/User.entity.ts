@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Bug } from "./Bug.entity";
 import { Project } from "./Project.entity";
+import { IUser } from "../interfaces/IUser";
 
 @Entity("Users")
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -17,7 +18,7 @@ export class User {
   name: string;
 
   @Column()
-  profilePicture?: string;
+  profilePictureUrl?: string;
 
   @Column()
   role: "Tester" | "Dev" | "Manager" | "Admin";

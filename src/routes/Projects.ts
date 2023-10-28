@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { container } from "../inversify.config";
-import { IProjectController } from "../interfaces/IProjecController";
+
 import TYPES from "../types";
 import asyncMiddleware from "../middleware/AsyncMiddleware";
+import { IProjectController } from "../interfaces/IProjecController";
 
-export const router: Router = Router();
+export const projectsRouter: Router = Router();
 const projectController = container.get<IProjectController>(
   TYPES.IProjectController
 );
@@ -27,7 +28,7 @@ const projectController = container.get<IProjectController>(
  *                   $ref: '#/components/schemas/Project'
  *
  */
-router.get(
+projectsRouter.get(
   "/",
   asyncMiddleware(async (req, res, next) => {
     const projects = await projectController.getProjects();
@@ -52,7 +53,7 @@ router.get(
  *                   $ref: '#/components/schemas/Project'
  *
  */
-router.get(
+projectsRouter.get(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const project = await projectController.getProjectById(+req.params.id);
@@ -61,7 +62,7 @@ router.get(
   })
 );
 
-router.post(
+projectsRouter.post(
   "/",
   asyncMiddleware(async (req, res, next) => {
     const project = await projectController.createProject(req.body);
@@ -70,7 +71,7 @@ router.post(
   })
 );
 
-router.put(
+projectsRouter.put(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const project = await projectController.updateProject(
@@ -82,7 +83,7 @@ router.put(
   })
 );
 
-router.delete(
+projectsRouter.delete(
   "/:id",
   asyncMiddleware(async (req, res, next) => {
     const result = await projectController.deleteProject(+req.params.id);

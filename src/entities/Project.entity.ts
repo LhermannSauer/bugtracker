@@ -10,6 +10,7 @@ import { Bug } from "./Bug.entity";
 import { IProject } from "../interfaces/IProject";
 import { IBug } from "../interfaces/IBug";
 import { User } from "./User.entity";
+import { IUser } from "../interfaces/IUser";
 
 @Entity({ name: "projects" })
 export class Project implements IProject {
@@ -23,7 +24,7 @@ export class Project implements IProject {
   description: string;
 
   @ManyToOne(() => User, (user) => user.project)
-  manager: User; // to be switched to User class when implemented
+  manager: IUser;
 
   @OneToMany(() => Bug, (bug) => bug.project)
   bugs: IBug[];

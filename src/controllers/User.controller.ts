@@ -38,6 +38,7 @@ export class UserController implements IUserController {
     return user;
   };
 
+  //TODO: case for updating password, comparing the user to the information in the token
   updateUser = async (id: string, userDTO: UserDTO): Promise<User> => {
     this.validateId(id);
     userDTO = plainToClass(UserDTO, userDTO);

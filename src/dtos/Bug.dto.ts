@@ -11,7 +11,6 @@ import {
 import { ProjectDTO } from "./Project.dto";
 import { PriorityDTO } from "./Priority.dto";
 import { StatusDTO } from "./Status.dto";
-import { User } from "../entities/User.entity";
 import { UserDTO } from "./User.dto";
 
 /**
