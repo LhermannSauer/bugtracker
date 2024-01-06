@@ -13,11 +13,29 @@ export class InvalidParameterError extends Error {
 }
 
 export class ValidationError extends Error {
-  /**
-   *
-   */
   constructor(message: string) {
     super();
     this.message = message;
+  }
+}
+
+export class ExistingUserError extends Error {
+  constructor() {
+    super();
+    this.message = "Username already exists";
+  }
+}
+
+export class UnauthorizedError extends Error {
+  constructor() {
+    super();
+    this.message = "You aRe not authorized to access this site";
+  }
+}
+
+export class ForbiddenError extends Error {
+  constructor() {
+    super();
+    this.message = "You lack the required credentials to access this site.";
   }
 }

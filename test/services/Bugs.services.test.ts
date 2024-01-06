@@ -2,6 +2,16 @@ import { Bug } from "../../src/entities/Bug.entity";
 import { BugsService } from "../../src/services/Bugs.service";
 import { NotFoundError } from "../../src/common/errors";
 import { Repository } from "typeorm";
+import { User } from "../../src/entities/User.entity";
+
+const user: User = {
+  id: "",
+  username: "",
+  password: "",
+  role: "Tester",
+  bugsAssigned: [],
+  bugsToTest: [],
+};
 
 const mockBugs: Bug[] = [
   {
@@ -10,7 +20,13 @@ const mockBugs: Bug[] = [
     title: "test",
     description: "test",
     priority: { id: 1, name: "test" },
-    project: { id: 1, bugs: [], description: "test", name: "test" },
+    project: {
+      id: 1,
+      bugs: [],
+      description: "test",
+      name: "test",
+      manager: user,
+    },
     status: { id: 1, name: "test" },
   },
   {
@@ -19,7 +35,13 @@ const mockBugs: Bug[] = [
     title: "test2",
     description: "test2",
     priority: { id: 1, name: "test2" },
-    project: { id: 1, bugs: [], description: "test2", name: "test2" },
+    project: {
+      id: 1,
+      bugs: [],
+      description: "test2",
+      name: "test2",
+      manager: user,
+    },
     status: { id: 1, name: "test2" },
   },
 ];

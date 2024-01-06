@@ -13,6 +13,8 @@ import { IBug } from "../interfaces/IBug";
 import { IPriority } from "../interfaces/IPriority";
 import { IStatus } from "../interfaces/IStatus";
 import { IProject } from "../interfaces/IProject";
+import { User } from "./User.entity";
+import { IUser } from "../interfaces/IUser";
 
 @Entity({ name: "bugs" })
 export class Bug implements IBug {
@@ -43,10 +45,9 @@ export class Bug implements IBug {
   @ManyToOne(() => Project, (project) => project.bugs, { eager: true })
   project: IProject;
 
-  // TO BE REPLACED WITH USER CLASSES
-  @Column({ nullable: true })
-  assignedDeveloper?: string;
+  @ManyToOne(() => User, (user) => user.bugsAssigned)
+  assignedDeveloper?: IUser;
 
-  @Column({ nullable: true })
-  tester?: string;
+  @ManyToOne(() => User, (user) => user.bugsAssigned)
+  tester?: IUser;
 }

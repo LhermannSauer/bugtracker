@@ -1,22 +1,21 @@
 import { inject, injectable } from "inversify";
-import { IBugsService } from "../interfaces/IBugsService";
-
-import { Bug } from "../entities/Bug.entity";
-
-import { BugDTO } from "../dtos/Bug.dto";
-import { IBug } from "../interfaces/IBug";
-import { NotFoundError } from "../common/errors";
 import { Repository } from "typeorm";
+
+import { IBugsService } from "../interfaces/IBugsService";
+import { IBug } from "../interfaces/IBug";
+
 import TYPES from "../types";
+import { NotFoundError } from "../common/errors";
+import { BugDTO } from "../dtos/Bug.dto";
 
 @injectable()
-export class BugsService implements IBugsService {
-  private bugRepository: Repository<Bug>;
-  constructor(@inject(TYPES.BugRepository) bugRepository: Repository<Bug>) {
+export class BugService implements IBugsService {
+  private bugRepository: Repository<IBug>;
+  constructor(@inject(TYPES.BugRepository) bugRepository: Repository<IBug>) {
     this.bugRepository = bugRepository;
   }
 
-  public getBugs = async (): Promise<Bug[]> => {
+  public getBugs = async (): Promise<IBug[]> => {
     const bugs = await this.bugRepository.find({
       relations: { project: true, priority: true, status: true },
       order: {
@@ -36,7 +35,7 @@ export class BugsService implements IBugsService {
       relations: { project: true, priority: true, status: true },
     });
 
-    if (!bug) throw new NotFoundError("Bug"); // to be replaced with not found error
+    if (!bug) throw new NotFoundError("Bug");
 
     return bug;
   };
@@ -44,12 +43,11 @@ export class BugsService implements IBugsService {
   public createBug = async (bugDTO: BugDTO): Promise<IBug> => {
     const bug = this.bugRepository.create(bugDTO);
 
-    return await this.bugRepository.save(bug);
+    return this.bugRepository.save(bug);
   };
 
   public updateBug = async (id: number, bugDTO: BugDTO): Promise<IBug> => {
     let bug = await this.getBugById(id);
-    if (!bug) throw new NotFoundError("Bug");
 
     this.bugRepository.merge(bug, bugDTO);
 

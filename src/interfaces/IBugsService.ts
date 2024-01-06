@@ -1,10 +1,11 @@
 import { BugDTO } from "../dtos/Bug.dto";
 import { Bug } from "../entities/Bug.entity";
+import { IBug } from "./IBug";
 
 export interface IBugsService {
-  getBugs(): Promise<Bug[]>;
-  getBugById(id: number): Promise<Bug>;
-  createBug(bugDTO: BugDTO): Promise<Bug>;
-  updateBug(id: number, bugDTO: BugDTO): Promise<Bug>;
+  getBugs(): Promise<IBug[]>;
+  getBugById(id: number): Promise<IBug>;
+  createBug(bugDTO: BugDTO): Promise<IBug>;
+  updateBug(id: number, bugDTO: BugDTO): Promise<IBug>;
   deleteBug(id: number): Promise<boolean>;
 }

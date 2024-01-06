@@ -5,45 +5,39 @@ import TYPES from "../types";
 import { isPositive, validate } from "class-validator";
 import { BugDTO } from "../dtos/Bug.dto";
 import { IBug } from "../interfaces/IBug";
-import _ from "lodash";
-import { InvalidParameterError, NotFoundError } from "../common/errors";
+import { InvalidParameterError } from "../common/errors";
+import { plainToClass } from "class-transformer";
 
 @injectable()
 export class BugsController implements IBugsController {
   @inject(TYPES.IBugsService)
   private readonly bugsService: IBugsService;
 
-  public getBugs = async (): Promise<IBug[]> => {
-    const bugs = await this.bugsService.getBugs();
-
-    return bugs;
-  };
+  public getBugs = async (): Promise<IBug[]> => this.bugsService.getBugs();
 
   public getBugById = async (id: number): Promise<IBug> => {
     this.validateId(id);
 
-    const bug = await this.bugsService.getBugById(+id);
+    const bug = await this.bugsService.getBugById(id);
 
     return bug;
   };
 
-  public createBug = async (data: BugDTO): Promise<IBug> => {
-    let bugDTO: BugDTO = new BugDTO();
-    _.assign(bugDTO, data);
+  public createBug = async (bugDTO: BugDTO): Promise<IBug> => {
+    bugDTO = plainToClass(BugDTO, bugDTO);
 
     const errors = await validate(bugDTO);
-    if (errors.length) throw new InvalidParameterError(errors[0].toString());
+    if (errors.length) throw new InvalidParameterError(errors[0].property);
 
     const bug = await this.bugsService.createBug(bugDTO);
 
     return bug;
   };
 
-  public updateBug = async (id: number, data: BugDTO): Promise<IBug> => {
+  public updateBug = async (id: number, bugDTO: BugDTO): Promise<IBug> => {
     this.validateId(id);
 
-    let bugDTO: BugDTO = new BugDTO();
-    _.assign(bugDTO, data);
+    bugDTO = plainToClass(BugDTO, bugDTO);
 
     const errors = await validate(bugDTO);
     if (errors.length) throw new InvalidParameterError(errors[0].toString());
